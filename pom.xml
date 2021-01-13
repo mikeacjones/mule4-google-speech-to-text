@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.mikej.connectors.google</groupId>
 	<artifactId>google-speech-to-text</artifactId>
-	<version>1.0.0-5-SNAPSHOT</version>
+	<version>1.0.0-19-SNAPSHOT</version>
 	<packaging>mule-extension</packaging>
 	<name>Google Speech to Text Extension</name>
 
