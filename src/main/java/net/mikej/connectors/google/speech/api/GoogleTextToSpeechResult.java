@@ -8,19 +8,16 @@ public class GoogleTextToSpeechResult {
 	
 	private float confidence;
 	private String transcript;
-	private int wordCount;
-	private int resultsCount;
+	private boolean isFinal;
 	
 	public GoogleTextToSpeechResult(
 			float confidence,
 			String transcript,
-			int wordCount,
-			int resultsCount
+			boolean isFinal
 	) {
 		this.confidence = confidence;
 		this.transcript = transcript;
-		this.wordCount = wordCount;
-		this.resultsCount = resultsCount;
+		this.isFinal = isFinal;
 	}
 	
 	
@@ -28,17 +25,14 @@ public class GoogleTextToSpeechResult {
 		StreamingRecognitionResult result = response.getResultsList().get(0);
 		SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
 		
-		
 		return new GoogleTextToSpeechResult(
 				alternative.getConfidence(),
 				alternative.getTranscript(),
-				alternative.getWordsCount(),
-				response.getResultsCount()
+				result.getIsFinal()
 		);
 	}
 	
 	public float getConfidence() { return confidence; }
 	public String getTranscript() { return transcript; }
-	public int getWordCount() { return wordCount; }
-	public int getResultsCount() { return resultsCount; }
+	public boolean getIsFinal() { return isFinal; }
 }
