@@ -1,10 +1,8 @@
 package net.mikej.connectors.google.speech.internal.connection;
 
-import java.io.Console;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.Base64;
 
 import com.google.api.gax.core.FixedCredentialsProvider;
@@ -15,7 +13,6 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.speech.v1.RecognitionConfig.AudioEncoding;
 import com.google.cloud.speech.v1.RecognitionConfig;
 import com.google.cloud.speech.v1.SpeechClient;
-import com.google.cloud.speech.v1.SpeechRecognitionAlternative;
 import com.google.cloud.speech.v1.SpeechSettings;
 import com.google.cloud.speech.v1.StreamingRecognitionConfig;
 import com.google.cloud.speech.v1.StreamingRecognizeResponse;
@@ -23,7 +20,6 @@ import com.google.protobuf.ByteString;
 
 import net.mikej.connectors.google.speech.api.GoogleTextToSpeechResult;
 
-import com.google.cloud.speech.v1.StreamingRecognitionResult;
 import com.google.cloud.speech.v1.StreamingRecognizeRequest;
 
 public class GoogleSpeechToTextClient {
@@ -78,22 +74,34 @@ public class GoogleSpeechToTextClient {
 			public void onStart(StreamController arg0) {
 				connectionOpen = true;
 			}
-			
 
 		};
 	}
 
 	public void start() throws FileNotFoundException, IOException {
-		if (this.speechClient == null) connect();
-		
+		if (this.speechClient == null)
+			connect();
+
 		this.clientStream = this.speechClient.streamingRecognizeCallable().splitCall(this.responseObserver);
 
-		RecognitionConfig recognitionConfig = RecognitionConfig.newBuilder().setEncoding(this.audioEncoding)
-				.setLanguageCode(this.languageCode).setSampleRateHertz(this.sampleRate).setEnableAutomaticPunctuation(true).build();
+		RecognitionConfig recognitionConfig = RecognitionConfig.newBuilder()
+				.setEncoding(this.audioEncoding)
+				.setLanguageCode(this.languageCode)
+				.setSampleRateHertz(this.sampleRate)
+				.setEnableAutomaticPunctuation(true)
+				.setUseEnhanced(true)
+				.setModel("phone_call")
+				.build();
+		
 		StreamingRecognitionConfig streamingRecognitionConfig = StreamingRecognitionConfig.newBuilder()
-				.setConfig(recognitionConfig).setInterimResults(true).build();
+				.setConfig(recognitionConfig)
+				.setInterimResults(true)
+				.build();
+		
 		StreamingRecognizeRequest request = StreamingRecognizeRequest.newBuilder()
-				.setStreamingConfig(streamingRecognitionConfig).build();
+				.setStreamingConfig(streamingRecognitionConfig)
+				.build();
+		
 		this.clientStream.send(request);
 	}
 
@@ -102,8 +110,7 @@ public class GoogleSpeechToTextClient {
 			start();
 		byte[] decodedData = Base64.getDecoder().decode(data);
 		ByteString byteString = ByteString.copyFrom(decodedData);
-		StreamingRecognizeRequest request = StreamingRecognizeRequest.newBuilder()
-				.setAudioContent(byteString).build();
+		StreamingRecognizeRequest request = StreamingRecognizeRequest.newBuilder().setAudioContent(byteString).build();
 		this.clientStream.send(request);
 	}
 
