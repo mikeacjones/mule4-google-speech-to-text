@@ -7,7 +7,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>af871948-2dd2-4f4c-8bbd-f6a997cd48d7</groupId>
   <artifactId>google-speech-to-text</artifactId>
-  <version>1.0.0-21-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>mule-extension</packaging>
   <name>Google Speech to Text Extension</name>
 
